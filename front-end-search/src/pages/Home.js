@@ -1,10 +1,8 @@
-import { http } from '@/axios';
+import { getDocument } from '@/services/homeServices';
 
 function Home() {
-  http
-    .get('/page/0')
-    .then((res) => console.log('res:', res))
-    .catch((err) => console.log('err:', err));
+  const data = getDocument();
+  console.log('data:', data);
 
   return (
     <>
