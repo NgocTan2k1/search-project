@@ -17,6 +17,7 @@
 /front-end-search/.env.development.local
 /front-end-search/.env.test.local
 /front-end-search/.env.production.local
+/front-end-search/.env
 
 /front-end-search/npm-debug.log*
 /front-end-search/yarn-debug.log*
