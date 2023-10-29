@@ -12,11 +12,11 @@
 /front-end-search/build
 
 # misc
-/front-end-search.DS_Store
-/front-end-search.env.local
-/front-end-search.env.development.local
-/front-end-search.env.test.local
-/front-end-search.env.production.local
+/front-end-search/.DS_Store
+/front-end-search/.env.local
+/front-end-search/.env.development.local
+/front-end-search/.env.test.local
+/front-end-search/.env.production.local
 
 /front-end-search/npm-debug.log*
 /front-end-search/yarn-debug.log*
