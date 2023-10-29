@@ -1,8 +1,7 @@
 import { http } from '@/axios/index';
 
-const getDocument = async () => {
-  const res = await http.get('/page/0');
-  return res;
+const getDocument = async (pageNumber) => {
+  return await http.get(`/page/${pageNumber}`);
 };
 
 export { getDocument };
