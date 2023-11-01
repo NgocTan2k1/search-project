@@ -4,7 +4,7 @@ import NotFound from '@pages/NotFound';
 
 function App() {
   return (
-    <div className="sm:px-2 md:px-4 mx-auto max-w-[90%]">
+    <div className="w-screen h-screen ">
       <Routes>
         {privateRoutes.map((route, index) => {
           const Element = route.component;
