@@ -1,98 +1,220 @@
-import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from 'firebase/auth';
+
+import logo from '../assets/img/logo.png';
+import Image from '@/components/login/Image';
+import app from '../firebase';
 
 function SignIn() {
+  // firebase
+  const auth = getAuth(app);
+
+  // useNavigate
+  const navigate = useNavigate();
+
+  const [email, setEmail] = useState('');
+  const [isValidEmail, setIsValidEmail] = useState(true);
+  const [password, setPassword] = useState('');
+  const [isValidPassword, setIsValidPassword] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // useEffect
+  useEffect(() => {
+    const idSetTimeout = setTimeout(() => {
+      document.getElementById('my_modal_loading_page').close();
+    }, 1000);
+
+    document.getElementById('my_modal_loading_page').showModal();
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setTimeout(() => {
+          clearTimeout(idSetTimeout);
+          navigate('/home');
+        }, 1000);
+      }
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // function
+
+  const loadingPage = () => {};
+
+  /**
+   *
+   * @returns
+   */
+  const validEmail = () => {
+    if (email.trim() === '' || !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
+      setIsValidEmail(false);
+      return;
+    }
+    setIsValidEmail(true);
+  };
+
+  /**
+   *
+   * @returns
+   */
+  const validPassword = () => {
+    if (password === '') {
+      setIsValidPassword(false);
+      return;
+    }
+    setIsValidPassword(true);
+  };
+
+  /**
+   *
+   */
+  const handleSignIn = async () => {
+    console.log({ email: email, password: password });
+
+    setIsLoading(true);
+    validEmail();
+    validPassword();
+
+    if (isValidEmail && isValidPassword) {
+      await signInWithEmailAndPassword(auth, email, password)
+        .then((res) => {
+          setIsLoading(false);
+          navigate('/home');
+        })
+        .catch((err) => {
+          setIsLoading(false);
+          setIsValidEmail(false);
+          setIsValidPassword(false);
+          document.getElementById('my_modal').showModal();
+        });
+    }
+    setIsLoading(false);
+  };
+
   return (
-    <main className="my-auto transition-all duration-200 ease-soft-in-out ps">
-      <section>
-        <div className="relative flex items-center p-0 overflow-hidden bg-center bg-cover min-h-100-screen">
-          <div className="container z-10">
-            <div className="flex flex-wrap mt-0 -mx-3">
-              <div className="flex flex-col w-full max-w-full px-3 mx-auto md:flex-0 shrink-0 md:w-6/12 lg:w-5/12 xl:w-4/12">
-                <div className="relative flex flex-col min-w-0 mt-32 break-words bg-transparent border-0 shadow-none rounded-2xl bg-clip-border">
-                  <div className="p-6 pb-0 mb-0 bg-transparent border-b-0 rounded-t-2xl">
-                    <h3 className="relative z-10 font-bold text-transparent bg-gradient-to-tl from-blue-600 to-cyan-400 bg-clip-text">
-                      Welcome back
-                    </h3>
-                    <p className="mb-0">Enter your email and password to sign in</p>
-                  </div>
-                  <div className="flex-auto p-6">
-                    <form>
-                      <label className="mb-2 ml-1 font-bold text-xs text-slate-700">Email</label>
-                      <div className="mb-4">
-                        <input
-                          type="email"
-                          className="focus:shadow-soft-primary-outline text-sm leading-5.6 ease-soft block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 transition-all focus:border-fuchsia-300 focus:outline-none focus:transition-shadow"
-                          placeholder="Email"
-                          aria-label="Email"
-                          aria-describedby="email-addon"
-                        />
-                      </div>
-                      <label className="mb-2 ml-1 font-bold text-xs text-slate-700">Password</label>
-                      <div className="mb-4">
-                        <input
-                          type="email"
-                          className="focus:shadow-soft-primary-outline text-sm leading-5.6 ease-soft block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 transition-all focus:border-fuchsia-300 focus:outline-none focus:transition-shadow"
-                          placeholder="Password"
-                          aria-label="Password"
-                          aria-describedby="password-addon"
-                        />
-                      </div>
-                      <div className="min-h-6 mb-0.5 block pl-12">
-                        <input
-                          id="rememberMe"
-                          className="mt-[0.54] rounded-10 duration-250 ease-soft-in-out after:rounded-circle after:shadow-soft-2xl after:duration-250 checked:after:translate-x-5.25 h-5 relative float-left -ml-12 w-10 cursor-pointer appearance-none border border-solid border-gray-200 bg-slate-800/10 bg-none bg-contain bg-left bg-no-repeat align-top transition-all after:absolute after:top-px after:h-4 after:w-4 after:translate-x-px after:bg-white after:content-[''] checked:border-slate-800/95 checked:bg-slate-800/95 checked:bg-none checked:bg-right"
-                          type="checkbox"
-                          checked=""
-                        />
-                        <label
-                          className="mb-2 ml-1 font-normal cursor-pointer select-none text-sm text-slate-700"
-                          for="rememberMe"
-                        >
-                          Remember me
-                        </label>
-                      </div>
-                      <div className="text-center">
-                        <button
-                          type="button"
-                          className="inline-block w-full px-6 py-3 mt-6 mb-0 font-bold text-center text-white uppercase align-middle transition-all bg-transparent border-0 rounded-lg cursor-pointer shadow-soft-md bg-x-25 bg-150 leading-pro text-xs ease-soft-in tracking-tight-soft bg-gradient-to-tl from-blue-600 to-cyan-400 hover:scale-102 hover:shadow-soft-xs active:opacity-85"
-                        >
-                          Sign in
-                        </button>
-                      </div>
-                    </form>
-                  </div>
-                  <div className="p-6 px-1 pt-0 text-center bg-transparent border-t-0 border-t-solid rounded-b-2xl lg:px-2">
-                    <p className="mx-auto mb-6 leading-normal text-sm">
-                      Don't have an account?
-                      <Link
-                        to="/sign-up"
-                        className="relative z-10 font-semibold text-transparent bg-gradient-to-tl from-blue-600 to-cyan-400 bg-clip-text"
-                      >
-                        Sign up
-                      </Link>
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="w-full max-w-full px-3 lg:flex-0 shrink-0 md:w-6/12">
-                <div className="absolute top-0 hidden w-3/5 h-full mr-[128px] overflow-hidden skew-x-[40px] right-[-160px] rounded-bl-xl md:block">
-                  <div
-                    className="absolute inset-x-0 top-0 z-0 h-full ml-[64px] bg-cover skew-x-10 designbg"
-                    // style={{ backgroundImage: img }}
-                  ></div>
-                </div>
+    <div className="flex w-full h-full bg-gradient-to-br from-[rgba(149,225,255,0.7)] to-[rgba(162,230,230,0.8)] shadow-xl">
+      <dialog id="my_modal_loading_page" className="modal">
+        <div className="w-auto h-auto modal-box text-center">
+          <span className="loading loading-dots loading-lg"></span>
+        </div>
+      </dialog>
+      <dialog id="my_modal" className="modal">
+        <div className="modal-box">
+          <form method="dialog">
+            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+          </form>
+          <h3 className="font-bold text-2xl">Notice</h3>
+          <p className="py-4">Please check your email and password!</p>
+        </div>
+      </dialog>
+      <div
+        className="
+          relative grid rounded-[25px] bg-[#ffffff] m-auto overflow-hidden
+          lg:w-[65%] lg:h-[80%] lg:grid-flow-col lg:grid-cols-8
+          md:w-[60%] md:h-[80%] md:grid-flow-row sm:grid-rows-8 
+          sm:w-[60%] sm:h-[90%] sm:grid-flow-row sm:grid-rows-8 
+          "
+      >
+        <div className="relative flex w-full h-full justify-center lg:row-span-full lg:col-span-3">
+          <Image
+            logo={logo}
+            title={'Welcome to our website'}
+            mode="
+              sm:hidden lg:block
+              lg:after:content-[''] lg:after:w-[1px] lg:after:h-[98%] 
+              lg:after:bg-black lg:after:absolute lg:after:right-[0px] lg:after:top-[50%] lg:after:translate-y-[-50%]"
+          />
+        </div>
+        <div className="w-full h-full m-auto sm:row-span-5 md:row-span-5 lg:row-span-full lg:col-span-5">
+          <h1 className="text-4xl mt-[5%] font-bold text-center">Sign In</h1>
+          <h2 className="text-2xl mt-[2%] font-bold text-center">into our website</h2>
+          <div className="block max-w-md w-auto m-auto h-auto rounded-lg bg-white p-6 ">
+            {/*  */}
+            <div className="form-control w-full h-auto max-w-md my-2">
+              <label className="label">
+                <span className="label-text">Email address?</span>
+              </label>
+              <input
+                type="email"
+                placeholder="Your email..."
+                className={`input input-bordered w-full max-w-md ${isValidEmail ? 'input-info' : ' input-error'}`}
+                value={email}
+                onChange={(event) => {
+                  setEmail(event.target.value);
+                  setIsValidEmail(true);
+                }}
+              />
+            </div>
+            <div className="form-control w-full h-auto max-w-md my-2">
+              <label className="label">
+                <span className="label-text">Password</span>
+              </label>
+              <div className="relative">
+                <input
+                  className={`input input-bordered w-full max-w-md ${isValidPassword ? 'input-info' : ' input-error'}`}
+                  type="password"
+                  placeholder="Your password..."
+                  value={password}
+                  onChange={(event) => {
+                    setPassword(event.target.value);
+                    setIsValidPassword(true);
+                  }}
+                  onKeyDown={(event) => {
+                    if (event.keyCode === 13) {
+                      event.preventDefault();
+                      handleSignIn();
+                    }
+                  }}
+                />
               </div>
             </div>
+
+            {/* <!--Remember me checkbox--> */}
+            <div className="my-6 items-center justify-between">
+              <div className="block min-h-[1.5rem] pl-[1.5rem]">
+                <input
+                  className="relative float-left -ml-[1.5rem] mr-[6px] mt-[0.15rem] h-[1.125rem] w-[1.125rem] appearance-none rounded-[0.25rem] border-[0.125rem] border-solid border-neutral-300 outline-none before:pointer-events-none before:absolute before:h-[0.875rem] before:w-[0.875rem] before:scale-0 before:rounded-full before:bg-transparent before:opacity-0 before:shadow-[0px_0px_0px_13px_transparent] before:content-[''] checked:border-primary checked:bg-primary checked:before:opacity-[0.16] checked:after:absolute checked:after:-mt-px checked:after:ml-[0.25rem] checked:after:block checked:after:h-[0.8125rem] checked:after:w-[0.375rem] checked:after:rotate-45 checked:after:border-[0.125rem] checked:after:border-l-0 checked:after:border-t-0 checked:after:border-solid checked:after:border-white checked:after:bg-transparent checked:after:content-[''] hover:cursor-pointer hover:before:opacity-[0.04] hover:before:shadow-[0px_0px_0px_13px_rgba(0,0,0,0.6)] focus:shadow-none focus:transition-[border-color_0.2s] focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[0px_0px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] focus:after:absolute focus:after:z-[1] focus:after:block focus:after:h-[0.875rem] focus:after:w-[0.875rem] focus:after:rounded-[0.125rem] focus:after:content-[''] checked:focus:before:scale-100 checked:focus:before:shadow-[0px_0px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] checked:focus:after:-mt-px checked:focus:after:ml-[0.25rem] checked:focus:after:h-[0.8125rem] checked:focus:after:w-[0.375rem] checked:focus:after:rotate-45 checked:focus:after:rounded-none checked:focus:after:border-[0.125rem] checked:focus:after:border-l-0 checked:focus:after:border-t-0 checked:focus:after:border-solid checked:focus:after:border-white checked:focus:after:bg-transparent dark:border-neutral-600 dark:checked:border-primary dark:checked:bg-primary dark:focus:before:shadow-[0px_0px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:before:shadow-[0px_0px_0px_13px_#3b71ca]"
+                  type="checkbox"
+                  value=""
+                  id="exampleCheck2"
+                />
+                <label className="inline-block pl-[0.15rem] hover:cursor-pointer" htmlFor="exampleCheck2">
+                  Remember me
+                </label>
+              </div>
+
+              {/* <!--Forgot password link--> */}
+              <Link
+                to="#!"
+                className="text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
+              >
+                Forgot password?
+              </Link>
+            </div>
+
+            {/* <!--Submit button--> */}
+            <button
+              type="button"
+              className="block btn btn-info w-full rounded px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] "
+              onClick={handleSignIn}
+            >
+              {isLoading ? <span className="loading loading-spinner sm:loading-sm md:loading-md"></span> : 'Sign in'}
+            </button>
+
+            {/* <!--Register link--> */}
+            <p className="mt-6 text-center text-neutral-800 dark:text-neutral-200">
+              Not a member?{' '}
+              <Link
+                to="/sign-up"
+                className="text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
+              >
+                Register
+              </Link>
+            </p>
           </div>
         </div>
-      </section>
-      <div className="ps__rail-x" style={{ left: '0px', bottom: '0px' }}>
-        <div className="ps__thumb-x" tabindex="0" style={{ left: ' 0px', width: '0px' }}></div>
       </div>
-      <div className="ps__rail-y" style={{ top: ' 0px', right: '0px' }}>
-        <div className="ps__thumb-y" tabindex="0" style={{ top: '0px', height: '0px' }}></div>
-      </div>
-    </main>
+    </div>
   );
 }
 

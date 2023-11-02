@@ -10,6 +10,7 @@ function App() {
           const Element = route.component;
           return <Route key={index} path={route.path} element={<Element />} />;
         })}
+
         {publicRoutes.map((route, index) => {
           const Element = route.component;
           return <Route key={index} path={route.path} element={<Element />} />;
