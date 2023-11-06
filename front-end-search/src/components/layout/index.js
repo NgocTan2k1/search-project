@@ -1,8 +1,12 @@
-function LayOut({ chilren }) {
+import BaseNav from '../nav/BaseNav';
+
+function LayOut({ active, chilren }) {
   return (
     <div className="w-full h-screen flex">
-      <div className="bg-[red] w-[20%] h-full max-w-[400px]"></div>
-      <div className="bg-[blue] h-full overflow-auto flex-1"></div>
+      <div className="bg-[#111827] text-white w-[20%] h-full max-w-[400px]">
+        <BaseNav active={active}></BaseNav>
+      </div>
+      <div className="bg-[#fff] h-full overflow-auto flex-1"></div>
     </div>
   );
 }

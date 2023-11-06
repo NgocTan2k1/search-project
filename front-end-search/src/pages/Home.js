@@ -59,10 +59,7 @@ function Home() {
           <span className="loading loading-dots loading-lg"></span>
         </div>
       </dialog>
-      <LayOut></LayOut>
-      <button className="btn" onClick={handleSignOut}>
-        Logout
-      </button>
+      <LayOut active={1}></LayOut>
     </>
   );
 }
