@@ -39,8 +39,6 @@ function SignIn() {
 
   // function
 
-  const loadingPage = () => {};
-
   /**
    *
    * @returns
@@ -72,22 +70,22 @@ function SignIn() {
     console.log({ email: email, password: password });
 
     setIsLoading(true);
-    validEmail();
-    validPassword();
+    await validEmail();
+    await validPassword();
 
-    if (isValidEmail && isValidPassword) {
-      await signInWithEmailAndPassword(auth, email, password)
-        .then((res) => {
-          setIsLoading(false);
-          navigate('/home');
-        })
-        .catch((err) => {
-          setIsLoading(false);
-          setIsValidEmail(false);
-          setIsValidPassword(false);
-          document.getElementById('my_modal').showModal();
-        });
-    }
+    await signInWithEmailAndPassword(auth, email, password)
+      .then((res) => {
+        console.log('res', res);
+        setIsLoading(false);
+        navigate('/home');
+      })
+      .catch((err) => {
+        setIsLoading(false);
+        setIsValidEmail(false);
+        setIsValidPassword(false);
+        document.getElementById('my_modal').showModal();
+      });
+
     setIsLoading(false);
   };
 

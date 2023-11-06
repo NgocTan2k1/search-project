@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getAuth, signOut } from 'firebase/auth';
+import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 
 import app from '../firebase';
 import { getDocument } from '@/services/homeServices';
+import LayOut from '@/components/layout';
 
 function Home() {
   // firebase
@@ -15,11 +16,28 @@ function Home() {
   const [data, setData] = useState();
 
   useEffect(() => {
+    const idSetTimeout = setTimeout(() => {
+      document.getElementById('my_modal_loading_page').close();
+    }, 1000);
+
+    document.getElementById('my_modal_loading_page').showModal();
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        setTimeout(() => {
+          clearTimeout(idSetTimeout);
+          navigate('/');
+        }, 1000);
+      }
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+
     getDocument(0).then((res) => {
       console.log(res);
       setData(res.content);
     });
   }, []);
+
+  console.log(data);
 
   //function
   const handleSignOut = () => {
@@ -36,7 +54,12 @@ function Home() {
 
   return (
     <>
-      <h2 className="">HOME PAGE</h2>
+      <dialog id="my_modal_loading_page" className="modal">
+        <div className="w-auto h-auto modal-box text-center">
+          <span className="loading loading-dots loading-lg"></span>
+        </div>
+      </dialog>
+      <LayOut></LayOut>
       <button className="btn" onClick={handleSignOut}>
         Logout
       </button>
