@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 import app from '../firebase';
 import { getDocument } from '@/services/homeServices';
-import LayOut from '@/components/layout';
+import Layout from '@/components/layout/Layout';
 
 function Home() {
   // firebase
@@ -35,22 +35,10 @@ function Home() {
       console.log(res);
       setData(res.content);
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   console.log(data);
-
-  //function
-  const handleSignOut = () => {
-    signOut(auth)
-      .then(() => {
-        alert('Đã đăng xuất');
-        navigate('/sign-in');
-      })
-      .catch((error) => {
-        alert('không thể đăng xuất');
-        console.log(error);
-      });
-  };
 
   return (
     <>
@@ -59,7 +47,7 @@ function Home() {
           <span className="loading loading-dots loading-lg"></span>
         </div>
       </dialog>
-      <LayOut active={1}></LayOut>
+      <Layout active={1}></Layout>
     </>
   );
 }
