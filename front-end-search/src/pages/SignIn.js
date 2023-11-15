@@ -6,9 +6,14 @@ import logo from '../assets/img/logo.png';
 import Image from '@/components/login/Image';
 import app from '../firebase';
 
+import { storeLocal } from '@store';
+
 function SignIn() {
   // firebase
   const auth = getAuth(app);
+
+  //store
+  const setUserInfo = storeLocal((state) => state.setUserInfo);
 
   // useNavigate
   const navigate = useNavigate();
@@ -28,6 +33,10 @@ function SignIn() {
     document.getElementById('my_modal_loading_page').showModal();
     onAuthStateChanged(auth, (user) => {
       if (user) {
+        setUserInfo({
+          uid: user.uid,
+          email: user.email,
+        });
         setTimeout(() => {
           clearTimeout(idSetTimeout);
           navigate('/home');
@@ -67,8 +76,6 @@ function SignIn() {
    *
    */
   const handleSignIn = async () => {
-    console.log({ email: email, password: password });
-
     setIsLoading(true);
     await validEmail();
     await validPassword();
@@ -76,6 +83,10 @@ function SignIn() {
     await signInWithEmailAndPassword(auth, email, password)
       .then((res) => {
         console.log('res', res);
+        setUserInfo({
+          uid: res.user.uid,
+          email: res.user.email,
+        });
         setIsLoading(false);
         navigate('/home');
       })

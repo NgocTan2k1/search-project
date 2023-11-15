@@ -9,12 +9,17 @@ import FilesList from '@/components/file/FilesList';
 import FileItem from '@/components/file/FileItem';
 import Pagination from '@/components/paginantion/Pagination';
 
+import { storeLocal } from '@store';
+
 function Home() {
   // firebase
   const auth = getAuth(app);
 
   // useNavigate
   const navigate = useNavigate();
+
+  //store
+  const setUserInfo = storeLocal((state) => state.setUserInfo);
 
   const [data, setData] = useState();
   const [currentPage, setCurrentPage] = useState(1);
@@ -32,6 +37,10 @@ function Home() {
           navigate('/');
         }, 1000);
       }
+      setUserInfo({
+        uid: user.uid,
+        email: user.email,
+      });
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
 

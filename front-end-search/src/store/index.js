@@ -2,9 +2,10 @@ import { create } from 'zustand';
 
 const storeLocal = create((set) => ({
   userInfo: {},
-  setUserInfo: () => set((datas) => ({ userInfo: { ...datas } })),
+  setUserInfo: (datas) => set(() => ({ userInfo: { ...datas } })),
+
   documents: [],
-  setDocuments: () => set((datas) => ({ documents: [...datas] })),
+  setDocuments: (datas) => set(() => ({ documents: [...datas] })),
 
   resetStore: () =>
     set(() => ({
