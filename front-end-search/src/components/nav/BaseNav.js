@@ -1,11 +1,6 @@
-import { getAuth, signOut } from 'firebase/auth';
-import { useNavigate } from 'react-router-dom';
-
 import NavList from './NavList';
 import NavItem from './NavItem';
 import Button from '../button/Button';
-
-import app from '@/firebase';
 import { navList, otherNav } from '@/store/dummyData';
 
 function BaseNav({ active }) {

@@ -39,14 +39,24 @@ function Button({ item }) {
       className={`flex w-full h-full items-center hover:bg-[#1F2937] px-2 py-1 rounded-xl hover:cursor-pointer`}
       onClick={item.name === 'Sign Out' ? handleSignOut : handleOpenModalUpload}
     >
-      <dialog id="my_modal_upload" className="modal modal-bottom sm:modal-middle">
+      <dialog id="my_modal_upload" className="modal modal-bottom sm:modal-middle text-black">
         <div className="modal-box">
-          <h3 className="font-bold text-lg">Hello!</h3>
-          <p className="py-4">Press ESC key or click the button below to close</p>
+          <form method="dialog">
+            {/* if there is a button in form, it will close the modal */}
+            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+          </form>
+          <div className="flex flex-col w-full justify-center justify-items-center text-black">
+            <h3 className="font-bold text-lg mx-auto my-4">Upload Your File!</h3>
+            <input type="file" className="file-input file-input-bordered file-input-md w-full" />
+          </div>
           <div className="modal-action">
+            <form method="dialog" className="modal-backdrop">
+              <button>close</button>
+            </form>
             <form method="dialog">
               <button className="btn focus-visible:outline-none">Close</button>
             </form>
+
             <button className="btn" onClick={handleUpload}>
               Upload
             </button>

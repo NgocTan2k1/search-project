@@ -5,6 +5,9 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import app from '../firebase';
 import { getDocument } from '@/services/homeServices';
 import Layout from '@/components/layout/Layout';
+import FilesList from '@/components/file/FilesList';
+import FileItem from '@/components/file/FileItem';
+import Pagination from '@/components/paginantion/Pagination';
 
 function Home() {
   // firebase
@@ -14,6 +17,7 @@ function Home() {
   const navigate = useNavigate();
 
   const [data, setData] = useState();
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     const idSetTimeout = setTimeout(() => {
@@ -47,7 +51,17 @@ function Home() {
           <span className="loading loading-dots loading-lg"></span>
         </div>
       </dialog>
-      <Layout active={1}></Layout>
+      <Layout active={1}>
+        <FilesList className="grid grid-cols-2 gap-4">
+          <FileItem className=""></FileItem>
+          <FileItem className=""></FileItem>
+          <FileItem className=""></FileItem>
+          <FileItem className=""></FileItem>
+          <FileItem className=""></FileItem>
+          <FileItem className=""></FileItem>
+        </FilesList>
+        <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} length={20}></Pagination>
+      </Layout>
     </>
   );
 }
