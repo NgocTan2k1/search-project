@@ -60,7 +60,7 @@ function Home() {
           <span className="loading loading-dots loading-lg"></span>
         </div>
       </dialog>
-      <Layout active={1}>
+      <Layout active={1} pageName="HomePage">
         <FilesList className="grid grid-cols-2 gap-4">
           <FileItem className=""></FileItem>
           <FileItem className=""></FileItem>

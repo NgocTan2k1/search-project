@@ -1,9 +1,9 @@
 import Search from '../search/Search';
 
-function TheHeader() {
+function TheHeader({ pageName }) {
   return (
     <div className="relative inline-flex justify-center justify-items-center w-full h-[60px]">
-      <h2 className="my-auto mx-5 text-lg font-bold">HomePage</h2>
+      <h2 className="my-auto mx-5 text-lg font-bold">{pageName}</h2>
       <Search />
       <img
         className="h-[40px] rounded-full object-contain my-auto mr-[40px] hover:cursor-pointer"

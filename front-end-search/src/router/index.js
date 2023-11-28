@@ -12,7 +12,7 @@ const publicRoutes = [
 
 const privateRoutes = [
   { path: '/home', component: Home },
-  { path: '/detail-document', component: DetailDocument },
+  { path: '/detail-document/:id', component: DetailDocument },
 ];
 
 export { privateRoutes, publicRoutes };
