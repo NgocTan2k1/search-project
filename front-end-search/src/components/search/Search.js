@@ -1,4 +1,68 @@
-function Search() {
+import React, { useState, useEffect } from 'react';
+import { AiOutlineSearch } from "react-icons/ai";
+import { MdHistory } from "react-icons/md";
+import axios from 'axios';
+
+
+const Search = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [suggestTerm, setSuggestTerm] = useState('');
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [suggestList, setSuggest] = useState([]);
+
+
+  const sampleData = [
+    'Document 1',
+    'Document 2',
+    'Document 3',
+    'Document 4',
+    'Document 5'
+  ];
+
+  // Suggestion
+  useEffect(() => {
+    // Gọi API từ ứng dụng Spring Boot
+    if (suggestTerm == '') {
+      // setShowResults(false);
+    } else {
+      axios.get(`http://127.0.0.1:5000/suggest?q=${suggestTerm}`)
+      .then((response) => {
+        setSuggest(response.data);
+        // setShowResults(true);
+        // setSearchResults(response.data)
+        // console.log('Response: ', response.highlights)
+        // console.log(response.data)
+      })
+      .catch((error) => {
+        // setError(error);
+        console.log("error when suggestion api")
+      });
+    }
+
+  }, [suggestTerm]);
+
+  const handleInputChange = (event) => {
+    setSearchTerm(event.target.value);
+    setShowDropdown(event.target.value !== '');
+    setSuggestTerm(event.target.value)
+  };
+
+  const handleDropdownItemClick = (value) => {
+    setSearchTerm(value);
+    setShowDropdown(false);
+    // Xử lý logic tìm kiếm hoặc các hành động khác dựa trên giá trị đã chọn
+  };
+
+  const handleInputBlur = () => {
+    setShowDropdown(false);
+  };
+
+  const handleInputFocus = () => {
+    if (searchTerm !== '') {
+      setShowDropdown(true);
+    }
+  };
+
   return (
     <div className="block max-w-2xl w-[50%] m-auto">
       <form className="flex items-center">
@@ -25,22 +89,59 @@ function Search() {
             id="voice-search"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Search the documents which you want to read..."
+            value={searchTerm}
+            onChange={handleInputChange}
+            onBlur={handleInputBlur}
+            onFocus={handleInputFocus}
             required
           />
-          {/* <button type="submit" className="flex absolute inset-y-0 right-0 items-center pr-3">
-            <svg
-              className="w-4 h-4 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                fillRule="evenodd"
-                d="M7 4a3 3 0 016 0v4a3 3 0 11-6 0V4zm4 10.93A7.001 7.001 0 0017 8a1 1 0 10-2 0A5 5 0 015 8a1 1 0 00-2 0 7.001 7.001 0 006 6.93V17H6a1 1 0 100 2h8a1 1 0 100-2h-3v-2.07z"
-                clipRule="evenodd"
-              ></path>
-            </svg>
-          </button> */}
+          {showDropdown && (
+            <ul className="absolute z-10 bg-white border border-gray-300 mt-1 w-full rounded-lg shadow-lg pb-1">
+              <div className='font-medium ml-4 mt-1 text-gray-400 border-b-[1px]'>Suggestions</div>
+              {sampleData
+                .filter((item) =>
+                  item.toLowerCase().includes(searchTerm.toLowerCase())
+                )
+                .map((item, index) => (
+                  <li
+                    key={index}
+                    className="cursor-pointer mx-2 px-2 py-[1px] hover:bg-[#3F96FE] text-base rounded hover:text-[white] hover:font-medium"
+                    onClick={() => handleDropdownItemClick(item)}
+                  >
+                    <AiOutlineSearch className='inline-block m-1' />
+                    {item}
+                  </li>
+                ))}
+              <div className='font-medium ml-4 mt-1 mr-4 text-gray-400 border-b-[1px]'>Testing</div>  
+
+              <div className="border border-gray-300 rounded-md p-2 bg-[white]">
+                {suggestList.map((item, index) => (
+                  <div>
+                    <button>
+                      <li key={index}>{item}</li>
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+
+              <div className='font-medium ml-4 mt-1 mr-4 text-gray-400 border-b-[1px]'>Histories</div>
+              {sampleData
+                .filter((item) =>
+                  item.toLowerCase().includes(searchTerm.toLowerCase())
+                )
+                .map((item, index) => (
+                  <li
+                    key={index}
+                    className="cursor-pointer mx-2 px-2 py-[1px] hover:bg-[#3F96FE] text-base rounded hover:text-[white] hover:font-medium"
+                    onClick={() => handleDropdownItemClick(item)}
+                  >
+                    <MdHistory className='inline-block m-1'/>
+                    {item}
+                  </li>
+                ))}
+            </ul>
+          )}
         </div>
         <button
           type="submit"
@@ -52,7 +153,7 @@ function Search() {
             stroke="currentColor"
             viewBox="0 0 24 24"
             xmlns="http://www.w3.org/2000/svg"
-          >
+          > 
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -65,6 +166,6 @@ function Search() {
       </form>
     </div>
   );
-}
+};
 
 export default Search;

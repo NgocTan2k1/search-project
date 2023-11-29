@@ -8,8 +8,19 @@ import Layout from '@/components/layout/Layout';
 import FilesList from '@/components/file/FilesList';
 import FileItem from '@/components/file/FileItem';
 import Pagination from '@/components/paginantion/Pagination';
+import Searching from '@/components/search/Searching';
+import Searchingg from '@/components/search/Searchingg';
+import ViewPdf from '@/components/search/ViewPdf';
 
 import { storeLocal } from '@store';
+
+import { pdfjs } from 'react-pdf';
+
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+  'pdfjs-dist/build/pdf.worker.min.js',
+  import.meta.url,
+).toString();
+
 
 function Home() {
   // firebase
@@ -24,34 +35,34 @@ function Home() {
   const [data, setData] = useState();
   const [currentPage, setCurrentPage] = useState(1);
 
-  useEffect(() => {
-    const idSetTimeout = setTimeout(() => {
-      document.getElementById('my_modal_loading_page').close();
-    }, 1000);
+  // useEffect(() => {
+  //   const idSetTimeout = setTimeout(() => {
+  //     document.getElementById('my_modal_loading_page').close();
+  //   }, 1000);
 
-    document.getElementById('my_modal_loading_page').showModal();
-    onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        setTimeout(() => {
-          clearTimeout(idSetTimeout);
-          navigate('/');
-        }, 1000);
-      }
-      setUserInfo({
-        uid: user.uid,
-        email: user.email,
-      });
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  //   document.getElementById('my_modal_loading_page').showModal();
+  //   onAuthStateChanged(auth, (user) => {
+  //     if (!user) {
+  //       setTimeout(() => {
+  //         clearTimeout(idSetTimeout);
+  //         navigate('/');
+  //       }, 1000);
+  //     }
+  //     setUserInfo({
+  //       uid: user.uid,
+  //       email: user.email,
+  //     });
+  //   });
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
 
-    getDocument(0).then((res) => {
-      console.log(res);
-      setData(res.content);
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  //   getDocument(0).then((res) => {
+  //     // console.log(res);
+  //     setData(res.content);
+  //   });
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
-  console.log(data);
+  // console.log(data);
 
   return (
     <>
@@ -61,7 +72,17 @@ function Home() {
         </div>
       </dialog>
       <Layout active={1}>
-        <FilesList className="grid grid-cols-2 gap-4">
+
+        {/* <Searching /> */}
+        <Searchingg />  
+        {/* <div
+          className="border-solid border-2 border-indigo-600 mx-7 my-2"
+        >
+          <ViewPdf />
+        </div> */}
+        
+
+        {/* <FilesList className="grid grid-cols-2 gap-4">
           <FileItem className=""></FileItem>
           <FileItem className=""></FileItem>
           <FileItem className=""></FileItem>
@@ -69,7 +90,7 @@ function Home() {
           <FileItem className=""></FileItem>
           <FileItem className=""></FileItem>
         </FilesList>
-        <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} length={20}></Pagination>
+        <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} length={20}></Pagination> */}
       </Layout>
     </>
   );
