@@ -20,6 +20,7 @@ function Home() {
 
   //store
   const setUserInfo = storeLocal((state) => state.setUserInfo);
+  const [totalPages, setTotalPages] = useState(12);
 
   const [data, setData] = useState();
   const [currentPage, setCurrentPage] = useState(1);
@@ -44,14 +45,23 @@ function Home() {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
 
-    getDocument(0).then((res) => {
-      console.log(res);
-      setData(res.content);
-    });
+    getDocument(0)
+      .then((res) => {
+        console.log('test call api: ', res);
+        setData(res.content);
+        setTotalPages(res.totalPages);
+      })
+      .catch((error) => {
+        console.log('Error in HomePage when call getDocument api', error);
+      });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  console.log(data);
+  useEffect(() => {
+    getDocument(currentPage - 1).then((res) => {
+      setData(res.content);
+    });
+  }, [currentPage]);
 
   return (
     <>
@@ -62,14 +72,11 @@ function Home() {
       </dialog>
       <Layout active={1} pageName="HomePage">
         <FilesList className="grid grid-cols-2 gap-4">
-          <FileItem className=""></FileItem>
-          <FileItem className=""></FileItem>
-          <FileItem className=""></FileItem>
-          <FileItem className=""></FileItem>
-          <FileItem className=""></FileItem>
-          <FileItem className=""></FileItem>
+          {data?.map((file) => {
+            return <FileItem className="" file={file} key={file.id_drive}></FileItem>;
+          })}
         </FilesList>
-        <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} length={20}></Pagination>
+        <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} length={totalPages}></Pagination>
       </Layout>
     </>
   );
