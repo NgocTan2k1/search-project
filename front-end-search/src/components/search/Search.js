@@ -1,6 +1,28 @@
+import { useState } from 'react';
+import { storeLocal } from '@store/index';
+
 function Search() {
+  // store
+  const showSearch = storeLocal((state) => state.showSearch);
+  const setShowSearch = storeLocal((state) => state.setShowSearch);
+  const oldSearchResult = storeLocal((state) => state.oldSearchResult);
+  const setOldSearchResult = storeLocal((state) => state.setOldSearchResult);
+
+  // state
+  const [valueSearch, setValueSearch] = useState('');
+
+  // function hide search result
+  window.addEventListener('click', (e) => {
+    if (
+      !document.querySelector('.input-search')?.contains(e.target) &&
+      !document.querySelector('.list-search')?.contains(e.target)
+    ) {
+      setShowSearch(false);
+    }
+  });
+
   return (
-    <div className="block max-w-2xl w-[50%] m-auto">
+    <div className="relative block max-w-2xl w-[50%] m-auto">
       <form className="flex items-center">
         <label htmlFor="voice-search" className="sr-only">
           Search
@@ -8,7 +30,7 @@ function Search() {
         <div className="relative w-full">
           <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
             <svg
-              className="w-5 h-5 text-gray-500 dark:text-gray-400"
+              className="w-5 h-5 text-gray-500 dark:text-gray-400 z-10"
               fill="currentColor"
               viewBox="0 0 20 20"
               xmlns="http://www.w3.org/2000/svg"
@@ -20,13 +42,35 @@ function Search() {
               ></path>
             </svg>
           </div>
-          <input
-            type="text"
-            id="voice-search"
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="Search the documents which you want to read..."
-            required
-          />
+          <div className="relative">
+            <input
+              type="text"
+              id="voice-search"
+              className="input-search bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="Search the documents which you want to read..."
+              autoComplete="off"
+              onFocus={() => {
+                setShowSearch(true);
+                setOldSearchResult(['hello', 'hi', 'xin chao', 'xin chao bn Khanh']);
+              }}
+              onChange={(e) => {
+                setValueSearch(e.target.value);
+                // setShowSearch(true);
+              }}
+              required
+              value={valueSearch}
+            />
+            {showSearch && (
+              <div className="absolute top-[36px] w-full h-auto bg-[red] z-20">
+                <ul className="list-search">
+                  <li>old Search</li>
+                  {oldSearchResult?.map((item, index) => {
+                    return <li key={index}>{item}</li>;
+                  })}
+                </ul>
+              </div>
+            )}
+          </div>
           {/* <button type="submit" className="flex absolute inset-y-0 right-0 items-center pr-3">
             <svg
               className="w-4 h-4 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
@@ -63,6 +107,7 @@ function Search() {
           Search
         </button>
       </form>
+      <div></div>
     </div>
   );
 }

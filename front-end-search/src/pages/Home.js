@@ -59,6 +59,7 @@ function Home() {
 
   useEffect(() => {
     getDocument(currentPage - 1).then((res) => {
+      console.log('page:', currentPage - 1, '\nfile: ', res.content);
       setData(res.content);
     });
   }, [currentPage]);
@@ -71,7 +72,7 @@ function Home() {
         </div>
       </dialog>
       <Layout active={1} pageName="HomePage">
-        <FilesList className="grid grid-cols-2 gap-4">
+        <FilesList className="grid grid-cols-2 grid-rows-3 gap-4">
           {data?.map((file) => {
             return <FileItem className="" file={file} key={file.id_drive}></FileItem>;
           })}

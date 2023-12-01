@@ -78,7 +78,11 @@ function Button({ item }) {
             </form>
             <div className="flex flex-col w-full justify-center justify-items-center text-black">
               <h3 className="font-bold text-lg mx-auto my-4">Upload Your File!</h3>
-              <input type="file" className="file-input file-input-bordered file-input-md w-full" onChange={handleFile} />
+              <input
+                type="file"
+                className="file-input file-input-bordered file-input-md w-full outline-red"
+                onChange={handleFile}
+              />
             </div>
             <div className="modal-action">
               <form method="dialog" className="modal-backdrop">
