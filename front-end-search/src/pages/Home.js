@@ -38,10 +38,10 @@ function Home() {
 
   useEffect(() => {
     const idSetTimeout = setTimeout(() => {
-      document.getElementById('my_modal_loading_page').close();
+      document?.getElementById('my_modal_loading_page')?.close();
     }, 1000);
 
-    document.getElementById('my_modal_loading_page').showModal();
+    document?.getElementById('my_modal_loading_page')?.showModal();
     onAuthStateChanged(auth, (user) => {
       if (!user) {
         setTimeout(() => {
@@ -50,16 +50,16 @@ function Home() {
         }, 1000);
       }
       setUserInfo({
-        uid: user.uid,
-        email: user.email,
+        uid: user?.uid,
+        email: user?.email,
       });
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
 
     getDocument(0).then((res) => {
       // console.log(res);
-      setData(res.content);
-      setTotalPages(res.totalPages);
+      setData(res?.content);
+      setTotalPages(res?.totalPages);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
