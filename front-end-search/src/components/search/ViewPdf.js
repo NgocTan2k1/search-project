@@ -5,7 +5,7 @@ import myPdf from './SRS.pdf';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import './style.css';
 
-function ViewPdf() {
+function ViewPdf({ file }) {
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(14);
 
@@ -14,32 +14,44 @@ function ViewPdf() {
   }
 
   return (
-    <>
-      <div>
-        <ul>
-          <li>Keyword: srs document</li>
-          <li>Filename: abc.pdf</li>
-          <li>Author: quangkhanh</li>
-          <li>Uploaded date: 20-10-23</li>
-          <li>Title: no title</li>
-          <li>Intro: no intro</li>
-          <li>Views: 2023</li>
+    <div className="wrapper__view__pdf flex h-full">
+      <div className="infomation w-[35%] h-full">
+        <h1 className="font-bold text-2xl pb-4">Detail Information</h1>
+        <ul className="list__information">
+          <li className="item__information">
+            <strong>Keyword:</strong> srs document
+          </li>
+          <li className="item__information">
+            <strong>Filename:</strong> {file?.filename || 'abc.pdf'}
+          </li>
+          <li className="item__information">
+            <strong>Author:</strong> {file?.upload_mail || 'quangkhanh'}
+          </li>
+          <li className="item__information">
+            <strong>Uploaded:</strong> {file?.create_on || 'date: 20-10-23'}
+          </li>
+          <li className="item__information">
+            <strong>Title:</strong> no title
+          </li>
+          <li className="item__information">
+            <strong>Intro:</strong> no intro
+          </li>
+          <li className="item__information">
+            <strong>Views:</strong> 2023
+          </li>
         </ul>
       </div>
       <div className="pdf-div">
-        <Document file={myPdf} onLoadSuccess={onDocumentLoadSuccess} className="border-dashed border-2 border-indigo-600">
+        <Document file={myPdf} onLoadSuccess={onDocumentLoadSuccess} className="w-full">
           {Array.apply(null, Array(numPages))
             // Array.apply(null, Array(1))
             .map((x, i) => i + 1)
             .map((page) => {
-              return <Page pageNumber={page} renderTextLayer={false} renderAnnotationLayer={false} />;
+              return <Page className="flex w-full" pageNumber={page} renderTextLayer={false} renderAnnotationLayer={false} />;
             })}
         </Document>
-        <p>
-          Page {pageNumber} of {numPages}
-        </p>
 
-        <button
+        {/* <button
           disabled={pageNumber === 1}
           onClick={() => setPageNumber(pageNumber - 1)}
           className="border-solid border-2 border-indigo-600 "
@@ -48,9 +60,9 @@ function ViewPdf() {
         </button>
         <button onClick={() => setPageNumber(pageNumber + 1)} className="border-solid border-2 border-indigo-600">
           Next
-        </button>
+        </button> */}
       </div>
-    </>
+    </div>
   );
 }
 

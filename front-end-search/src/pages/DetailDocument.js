@@ -13,25 +13,19 @@ import Searchingg from '@/components/search/Searchingg';
 import ViewPdf from '@/components/search/ViewPdf';
 import { useLocation } from 'react-router-dom';
 
-
 import { storeLocal } from '@store';
 
 import { pdfjs } from 'react-pdf';
 
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  'pdfjs-dist/build/pdf.worker.min.js',
-  import.meta.url,
-).toString();
-
+pdfjs.GlobalWorkerOptions.workerSrc = new URL('pdfjs-dist/build/pdf.worker.min.js', import.meta.url).toString();
 
 export default function DetailDocument() {
   const location = useLocation();
   // const { state } = location;
   const { filename, category } = location.state || {};
 
-
   // Sử dụng state từ URL
-  console.log("State", {filename}); // In ra state để kiểm tra trong console
+  console.log('State', { filename }); // In ra state để kiểm tra trong console
 
   return (
     <>
@@ -41,20 +35,9 @@ export default function DetailDocument() {
         </div>
       </dialog>
       <Layout active={1}>
-
-        <div className="border-solid border-2 border-indigo-600 mx-7 my-2">
+        <div className="mx-5 py-2 h-full">
           <ViewPdf />
         </div>
-
-        {/* <FilesList className="grid grid-cols-2 gap-4">
-          <FileItem className=""></FileItem>
-          <FileItem className=""></FileItem>
-          <FileItem className=""></FileItem>
-          <FileItem className=""></FileItem>
-          <FileItem className=""></FileItem>
-          <FileItem className=""></FileItem>
-        </FilesList>
-        <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} length={20}></Pagination> */}
       </Layout>
     </>
   );

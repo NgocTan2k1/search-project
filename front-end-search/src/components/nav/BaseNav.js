@@ -5,7 +5,7 @@ import { navList, otherNav } from '@/store/dummyData';
 
 function BaseNav({ active }) {
   return (
-    <div className="w-[80%] mx-auto my-4">
+    <div className="w-[80%] h-auto mx-auto my-4">
       {/* eslint-disable jsx-a11y/alt-text */}
       <img
         atl="icon"
