@@ -72,25 +72,20 @@ function Home() {
         </div>
       </dialog>
       <Layout active={1}>
-
-        {/* <Searching /> */}
-        <Searchingg />  
-        {/* <div
-          className="border-solid border-2 border-indigo-600 mx-7 my-2"
-        >
-          <ViewPdf />
-        </div> */}
+        Top hit: 
         
-
-        {/* <FilesList className="grid grid-cols-2 gap-4">
-          <FileItem className=""></FileItem>
-          <FileItem className=""></FileItem>
-          <FileItem className=""></FileItem>
-          <FileItem className=""></FileItem>
-          <FileItem className=""></FileItem>
-          <FileItem className=""></FileItem>
+        
+        <FilesList className="grid grid-cols-2 gap-4">
+          <FileItem className="" title="Hello, nice to meet you" author="QuangKhanh"></FileItem>
+          <FileItem className="" title="Hello, nice to meet you" author="QuangKhanh"></FileItem>
+          <FileItem className="" title="Hello, nice to meet you" author="QuangKhanh"></FileItem>
+          <FileItem className="" title="Hello, nice to meet you" author="QuangKhanh"></FileItem>
+          <FileItem className="" title="Hello, nice to meet you" author="QuangKhanh"></FileItem>
+          <FileItem className="" title="Hello, nice to meet you" author="QuangKhanh"></FileItem>
+          <FileItem className="" title="Hello, nice to meet you" author="QuangKhanh"></FileItem>
+          <FileItem className="" title="Hello, nice to meet you" author="QuangKhanh"></FileItem>
         </FilesList>
-        <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} length={20}></Pagination> */}
+        <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} length={20}></Pagination>
       </Layout>
     </>
   );
