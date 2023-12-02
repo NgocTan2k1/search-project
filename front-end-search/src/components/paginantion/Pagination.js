@@ -1,6 +1,6 @@
 function Pagination({ currentPage, length, setCurrentPage }) {
   return (
-    <div className="absolute join right-[42px]">
+    <div className="absolute join right-[42px] bottom-2">
       <button className="join-item btn" disabled={currentPage <= 1} onClick={() => setCurrentPage((prev) => prev - 1)}>
         «
       </button>

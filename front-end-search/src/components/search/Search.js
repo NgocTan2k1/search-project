@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { AiOutlineSearch } from "react-icons/ai";
-import { MdHistory } from "react-icons/md";
+import { AiOutlineSearch } from 'react-icons/ai';
+import { MdHistory } from 'react-icons/md';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom'; // import useHistory từ react-router-dom
-
 
 const Search = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -12,13 +11,7 @@ const Search = () => {
   const [suggestList, setSuggest] = useState([]);
   const navigate = useNavigate(); // sử dụng useHistory để điều hướng đến đường dẫn mới
 
-  const sampleData = [
-    'Document 1',
-    'Document 2',
-    'Document 3',
-    'Document 4',
-    'Document 5'
-  ];
+  const sampleData = ['Document 1', 'Document 2', 'Document 3', 'Document 4', 'Document 5'];
 
   // Suggestion
   useEffect(() => {
@@ -26,26 +19,27 @@ const Search = () => {
     if (suggestTerm == '') {
       // setShowResults(false);
     } else {
-      axios.get(`http://127.0.0.1:5000/suggest?q=${suggestTerm}`)
-      .then((response) => {
-        setSuggest(response.data);
-      })
-      .catch((error) => {
-        // setError(error);
-        console.log("error when suggestion api")
-      });
+      axios
+        .get(`http://127.0.0.1:5000/suggest?q=${suggestTerm}`)
+        .then((response) => {
+          setSuggest(response.data);
+        })
+        .catch((error) => {
+          // setError(error);
+          console.log('error when suggestion api');
+        });
     }
   }, [suggestTerm]);
 
   const handleInputChange = (event) => {
     setSearchTerm(event.target.value);
     setShowDropdown(event.target.value !== '');
-    setSuggestTerm(event.target.value)
+    setSuggestTerm(event.target.value);
   };
 
   const handleDropdownItemClick = (item) => {
     // setSearchTerm(value);
-    console.log("Hello", item)
+    console.log('Hello', item);
     navigate('/result', { state: { searchTerm } });
     setShowDropdown(false);
   };
@@ -53,12 +47,12 @@ const Search = () => {
   const handleSearch = (e) => {
     e.preventDefault();
     navigate('/result', { state: { searchTerm } });
-  }
+  };
 
   const handleInputBlur = (event) => {
     // if (!event.currentTarget.contains(event.relatedTarget)) {
     //   setShowDropdown(false);
-    // } 
+    // }
   };
 
   const handleInputFocus = () => {
@@ -67,7 +61,16 @@ const Search = () => {
     }
   };
 
-  
+  // javascript
+  window.addEventListener('click', (e) => {
+    if (
+      !document.querySelector('#voice-search')?.contains(e.target) &&
+      !document.querySelector('.search__list')?.contains(e.target)
+    ) {
+      setShowDropdown(false);
+    }
+  });
+
   return (
     <div className="block max-w-2xl w-[50%] m-auto">
       <div className="flex items-center">
@@ -95,33 +98,32 @@ const Search = () => {
             onChange={handleInputChange}
             onBlur={handleInputBlur}
             onFocus={handleInputFocus}
+            autoComplete="off"
             required
           />
           {showDropdown && (
-            <ul className="absolute z-10 bg-white border border-gray-300 mt-1 w-full rounded-lg shadow-lg pb-1">
-              <div className='font-medium ml-4 mt-1 text-gray-400 border-b-[1px] text-sm'>Suggestions</div>
-                {suggestList.map((item, index) => (
-                  <li 
-                    key={index}
-                    className="cursor-pointer mx-2 px-2 py-[1px] hover:bg-[#3F96FE] text-base rounded hover:text-[white] hover:font-medium"
-                    onClick={() => handleDropdownItemClick(item)}
-                  >
-                    <AiOutlineSearch className='inline-block m-1' />
-                    {item}
-                  </li>
-                ))}     
-              <div className='font-medium ml-4 mt-1 mr-4 text-gray-400 border-b-[1px] text-sm'>Histories</div>
+            <ul className="search__list absolute z-10 bg-white border border-gray-300 mt-1 w-full rounded-lg shadow-lg pb-1">
+              <div className="font-medium ml-4 mt-1 text-gray-400 border-b-[1px] text-sm">Suggestions</div>
+              {suggestList.map((item, index) => (
+                <li
+                  key={index}
+                  className="cursor-pointer mx-2 px-2 py-[1px] hover:bg-[#3F96FE] text-base rounded hover:text-[white] hover:font-medium"
+                  onClick={() => handleDropdownItemClick(item)}
+                >
+                  <AiOutlineSearch className="inline-block m-1" />
+                  {item}
+                </li>
+              ))}
+              <div className="font-medium ml-4 mt-1 mr-4 text-gray-400 border-b-[1px] text-sm">Histories</div>
               {sampleData
-                .filter((item) =>
-                  item.toLowerCase().includes(searchTerm.toLowerCase())
-                )
+                .filter((item) => item.toLowerCase().includes(searchTerm.toLowerCase()))
                 .map((item, index) => (
                   <li
                     key={index}
                     className="cursor-pointer mx-2 px-2 py-[1px] hover:bg-[#3F96FE] text-base rounded hover:text-[white] hover:font-medium"
                     onClick={() => handleDropdownItemClick(item)}
                   >
-                    <MdHistory className='inline-block m-1'/>
+                    <MdHistory className="inline-block m-1" />
                     {item}
                   </li>
                 ))}
@@ -138,14 +140,13 @@ const Search = () => {
             stroke="currentColor"
             viewBox="0 0 24 24"
             xmlns="http://www.w3.org/2000/svg"
-          > 
+          >
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
               strokeWidth="2"
               d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
             ></path>
-        
           </svg>
           Search
         </button>
@@ -154,4 +155,3 @@ const Search = () => {
   );
 };
 export default Search;
-

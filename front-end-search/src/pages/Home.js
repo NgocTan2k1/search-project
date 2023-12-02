@@ -16,11 +16,7 @@ import { storeLocal } from '@store';
 
 import { pdfjs } from 'react-pdf';
 
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  'pdfjs-dist/build/pdf.worker.min.js',
-  import.meta.url,
-).toString();
-
+pdfjs.GlobalWorkerOptions.workerSrc = new URL('pdfjs-dist/build/pdf.worker.min.js', import.meta.url).toString();
 
 function Home() {
   // firebase
@@ -36,34 +32,33 @@ function Home() {
   const [data, setData] = useState();
   const [currentPage, setCurrentPage] = useState(1);
 
-  // useEffect(() => {
-  //   const idSetTimeout = setTimeout(() => {
-  //     document.getElementById('my_modal_loading_page').close();
-  //   }, 1000);
+  useEffect(() => {
+    const idSetTimeout = setTimeout(() => {
+      document.getElementById('my_modal_loading_page').close();
+    }, 1000);
 
-  //   document.getElementById('my_modal_loading_page').showModal();
-  //   onAuthStateChanged(auth, (user) => {
-  //     if (!user) {
-  //       setTimeout(() => {
-  //         clearTimeout(idSetTimeout);
-  //         navigate('/');
-  //       }, 1000);
-  //     }
-  //     setUserInfo({
-  //       uid: user.uid,
-  //       email: user.email,
-  //     });
-  //   });
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+    document.getElementById('my_modal_loading_page').showModal();
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        setTimeout(() => {
+          clearTimeout(idSetTimeout);
+          navigate('/');
+        }, 1000);
+      }
+      setUserInfo({
+        uid: user.uid,
+        email: user.email,
+      });
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
 
-  //   getDocument(0).then((res) => {
-  //     // console.log(res);
-  //     setData(res.content);
-  //   });
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
-
-  // console.log(data);
+    getDocument(0).then((res) => {
+      // console.log(res);
+      setData(res.content);
+      setTotalPages(res.totalPages);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPage]);
 
   return (
     <>
@@ -73,20 +68,23 @@ function Home() {
         </div>
       </dialog>
       <Layout active={1}>
-        Top hit: 
-        
-        
-        <FilesList className="grid grid-cols-2 gap-4">
-          <FileItem className="" title="Hello, nice to meet you" author="QuangKhanh"></FileItem>
-          <FileItem className="" title="Hello, nice to meet you" author="QuangKhanh"></FileItem>
-          <FileItem className="" title="Hello, nice to meet you" author="QuangKhanh"></FileItem>
-          <FileItem className="" title="Hello, nice to meet you" author="QuangKhanh"></FileItem>
-          <FileItem className="" title="Hello, nice to meet you" author="QuangKhanh"></FileItem>
-          <FileItem className="" title="Hello, nice to meet you" author="QuangKhanh"></FileItem>
-          <FileItem className="" title="Hello, nice to meet you" author="QuangKhanh"></FileItem>
-          <FileItem className="" title="Hello, nice to meet you" author="QuangKhanh"></FileItem>
-        </FilesList>
-        <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} length={totalPages}></Pagination>
+        <div className="flex flex-col h-full pb-[60px]">
+          <div className="">top hit:</div>
+          <FilesList className="grid grid-cols-2 gap-4 flex-1">
+            {data?.map((file, index) => {
+              return (
+                <FileItem
+                  className=""
+                  key={index}
+                  title={file.filename}
+                  author={file.upload_mail}
+                  date={file.create_on}
+                ></FileItem>
+              );
+            })}
+          </FilesList>
+          <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} length={totalPages}></Pagination>
+        </div>
       </Layout>
     </>
   );
