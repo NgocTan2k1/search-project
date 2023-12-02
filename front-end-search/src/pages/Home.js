@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 import app from '../firebase';
-import { getDocument } from '@/services/homeServices';
+import { getDocument, getTopHits } from '@/services/homeServices';
 import Layout from '@/components/layout/Layout';
 import FilesList from '@/components/file/FilesList';
 import FileItem from '@/components/file/FileItem';
@@ -15,6 +15,7 @@ import ViewPdf from '@/components/search/ViewPdf';
 import { storeLocal } from '@store';
 
 import { pdfjs } from 'react-pdf';
+import Paper from '@/components/paper/Paper';
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL('pdfjs-dist/build/pdf.worker.min.js', import.meta.url).toString();
 
@@ -31,6 +32,9 @@ function Home() {
 
   const [data, setData] = useState();
   const [currentPage, setCurrentPage] = useState(1);
+
+  //state
+  const [topHits, setTopHits] = useState([]);
 
   useEffect(() => {
     const idSetTimeout = setTimeout(() => {
@@ -60,6 +64,16 @@ function Home() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
 
+  useEffect(() => {
+    getTopHits()
+      .then((res) => {
+        setTopHits(res);
+      })
+      .catch((error) => {
+        console.log('Error in HomePage when call api getTopHits: ', error);
+      });
+  }, []);
+
   return (
     <>
       <dialog id="my_modal_loading_page" className="modal">
@@ -69,12 +83,26 @@ function Home() {
       </dialog>
       <Layout active={1}>
         <div className="flex flex-col h-full pb-[60px]">
-          <div className="">top hit:</div>
+          <div className="mx-5 my-2 flex flex-wrap gap-x-4 gap-y-2">
+            <h1 className="font-bold underline my-auto">Top hit:</h1>
+            {/* <div className="list__top-hit"> */}
+            {topHits?.map((item, index) => {
+              return (
+                <Paper key={index} keyword={item.keyword}>
+                  <p className="">
+                    {item.keyword}: <strong>{item.count}</strong>
+                  </p>
+                </Paper>
+              );
+            })}
+            {/* </div> */}
+          </div>
           <FilesList className="grid grid-cols-2 gap-4 flex-1">
             {data?.map((file, index) => {
               return (
                 <FileItem
                   className=""
+                  idDriver={file.id_drive}
                   key={index}
                   title={file.filename}
                   author={file.upload_mail}

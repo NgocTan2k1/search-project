@@ -5,10 +5,20 @@ import { FaFileAlt } from 'react-icons/fa';
 import { CiCircleInfo } from 'react-icons/ci';
 import { FaRegFilePdf } from 'react-icons/fa';
 import img from './pdf.png';
+import { useNavigate } from 'react-router-dom';
 
-function FileItem({ title, author, date }) {
+function FileItem({ idDriver, title, author, date }) {
+  const navigate = useNavigate();
+
+  const handleNavigate = () => {
+    navigate('/detail-document/' + idDriver);
+  };
+
   return (
-    <li className="card w-90 h-auto bg-[#F5F5F5] shadow-md grid grid-cols-6 gap-4">
+    <li
+      className="card w-90 h-auto bg-[#F5F5F5] shadow-md grid grid-cols-6 gap-4 hover:cursor-pointer hover:opacity-75"
+      onClick={() => handleNavigate()}
+    >
       <div className="w-full h-full col-span-1 pl-3 flex items-center">
         <img src={img} alt="pdf-img" />
       </div>
