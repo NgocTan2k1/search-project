@@ -1,48 +1,37 @@
-import FileItem from '@/components/file/FileItem';
-import FilesList from '@/components/file/FilesList';
-import Layout from '@/components/layout/Layout';
-import Pagination from '@/components/paginantion/Pagination';
-import app from '@/firebase';
-import { storeLocal } from '@/store';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
-function DetailDocument() {
-  // firebase
-  const auth = getAuth(app);
+import app from '../firebase';
+import { getDocument } from '@/services/homeServices';
+import Layout from '@/components/layout/Layout';
+import FilesList from '@/components/file/FilesList';
+import FileItem from '@/components/file/FileItem';
+import Pagination from '@/components/paginantion/Pagination';
+import Searching from '@/components/search/Searching';
+import Searchingg from '@/components/search/Searchingg';
+import ViewPdf from '@/components/search/ViewPdf';
+import { useLocation } from 'react-router-dom';
 
-  // useNavigate
-  const navigate = useNavigate();
 
-  //store
-  const setUserInfo = storeLocal((state) => state.setUserInfo);
+import { storeLocal } from '@store';
 
-  const [data, setData] = useState();
-  const [currentPage, setCurrentPage] = useState(1);
+import { pdfjs } from 'react-pdf';
 
-  useEffect(() => {
-    const idSetTimeout = setTimeout(() => {
-      document.getElementById('my_modal_loading_page').close();
-    }, 1000);
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+  'pdfjs-dist/build/pdf.worker.min.js',
+  import.meta.url,
+).toString();
 
-    document.getElementById('my_modal_loading_page').showModal();
-    onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        setTimeout(() => {
-          clearTimeout(idSetTimeout);
-          navigate('/');
-        }, 1000);
-      }
-      setUserInfo({
-        uid: user.uid,
-        email: user.email,
-      });
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
-  console.log(data);
+export default function DetailDocument() {
+  const location = useLocation();
+  // const { state } = location;
+  const { filename, category } = location.state || {};
+
+
+  // Sử dụng state từ URL
+  console.log("State", {filename}); // In ra state để kiểm tra trong console
 
   return (
     <>
@@ -51,19 +40,22 @@ function DetailDocument() {
           <span className="loading loading-dots loading-lg"></span>
         </div>
       </dialog>
-      <Layout active={2} pageName="Document Detail">
-        <FilesList className="grid grid-cols-2 gap-4">
+      <Layout active={1}>
+
+        <div className="border-solid border-2 border-indigo-600 mx-7 my-2">
+          <ViewPdf />
+        </div>
+
+        {/* <FilesList className="grid grid-cols-2 gap-4">
           <FileItem className=""></FileItem>
           <FileItem className=""></FileItem>
           <FileItem className=""></FileItem>
           <FileItem className=""></FileItem>
           <FileItem className=""></FileItem>
-          {/* <FileItem className=""></FileItem> */}
+          <FileItem className=""></FileItem>
         </FilesList>
-        <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} length={20}></Pagination>
+        <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} length={20}></Pagination> */}
       </Layout>
     </>
   );
 }
-
-export default DetailDocument;
