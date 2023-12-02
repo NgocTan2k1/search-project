@@ -7,10 +7,18 @@ const storeLocal = create((set) => ({
   documents: [],
   setDocuments: (datas) => set(() => ({ documents: [...datas] })),
 
+  showSearch: false,
+  setShowSearch: (value) => set(() => ({ showSearch: value })),
+
+  oldSearchResult: [],
+  setOldSearchResult: (datas) => set(() => ({ oldSearchResult: [...datas] })),
+
   resetStore: () =>
     set(() => ({
       userInfo: {},
       documents: [],
+      showSearch: false,
+      oldSearchResult: [],
     })),
 }));
 

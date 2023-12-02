@@ -1,6 +1,6 @@
 import Search from '../search/Search';
 
-function TheHeader() {
+function TheHeader({ pageName }) {
   return (
     <div className="relative inline-flex justify-center justify-items-center w-full h-[50px]">
       <h2 className="my-auto mx-5 text-lg font-bold">

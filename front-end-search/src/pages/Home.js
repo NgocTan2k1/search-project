@@ -31,6 +31,7 @@ function Home() {
 
   //store
   const setUserInfo = storeLocal((state) => state.setUserInfo);
+  const [totalPages, setTotalPages] = useState(12);
 
   const [data, setData] = useState();
   const [currentPage, setCurrentPage] = useState(1);
@@ -85,7 +86,7 @@ function Home() {
           <FileItem className="" title="Hello, nice to meet you" author="QuangKhanh"></FileItem>
           <FileItem className="" title="Hello, nice to meet you" author="QuangKhanh"></FileItem>
         </FilesList>
-        <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} length={20}></Pagination>
+        <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} length={totalPages}></Pagination>
       </Layout>
     </>
   );

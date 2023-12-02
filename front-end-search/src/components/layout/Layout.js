@@ -1,7 +1,7 @@
 import BaseNav from '../nav/BaseNav';
 import TheHeader from './TheHeader';
 
-function Layout({ active, children }) {
+function Layout({ active, pageName, children }) {
   return (
     <div className="w-full h-screen flex">
       <div className="bg-[#111827] text-white w-[20%] h-full max-w-[400px]">
