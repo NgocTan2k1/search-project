@@ -98,6 +98,11 @@ const Search = () => {
             onChange={handleInputChange}
             onBlur={handleInputBlur}
             onFocus={handleInputFocus}
+            onKeyDown={(e) => {
+              if (e.keyCode === 13) {
+                handleSearch(e);
+              }
+            }}
             autoComplete="off"
             required
           />

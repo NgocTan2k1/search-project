@@ -2,9 +2,9 @@ import Search from '../search/Search';
 
 function TheHeader({ pageName }) {
   return (
-    <div className="relative inline-flex justify-center justify-items-center w-full h-[50px]">
+    <div className="relative inline-flex justify-center justify-items-center w-full h-[50px] py-2">
       <h2 className="my-auto mx-5 text-lg font-bold">
-        <a href='http://localhost:3000/home'>HomePage</a>
+        <a href="http://localhost:3000/home">HomePage</a>
       </h2>
       <Search />
       <img
