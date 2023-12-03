@@ -1,35 +1,48 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { MdHistory } from 'react-icons/md';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom'; // import useHistory từ react-router-dom
+import { getHistory, postSearchHistory, searchDocument } from '@/services/searchService';
+import { useDebounce } from '@/hook/useDebounce';
+import { storeLocal } from '@/store';
 
 const Search = () => {
+  // store
+  const userInfo = storeLocal((state) => state.userInfo);
+
   const [searchTerm, setSearchTerm] = useState('');
   const [suggestTerm, setSuggestTerm] = useState('');
   const [showDropdown, setShowDropdown] = useState(false);
   const [suggestList, setSuggest] = useState([]);
   const navigate = useNavigate(); // sử dụng useHistory để điều hướng đến đường dẫn mới
+  const debounced = useDebounce(searchTerm, 800);
+  const [resultHistory, setResultHistory] = useState([]);
 
-  const sampleData = ['Document 1', 'Document 2', 'Document 3', 'Document 4', 'Document 5'];
+  // const sampleData = ['Document 1', 'Document 2', 'Document 3', 'Document 4', 'Document 5'];
 
   // Suggestion
   useEffect(() => {
     // Gọi API từ ứng dụng Spring Boot
-    if (suggestTerm == '') {
-      // setShowResults(false);
-    } else {
-      axios
-        .get(`http://127.0.0.1:5000/suggest?q=${suggestTerm}`)
-        .then((response) => {
-          setSuggest(response.data);
-        })
-        .catch((error) => {
-          // setError(error);
-          console.log('error when suggestion api');
-        });
-    }
-  }, [suggestTerm]);
+    searchDocument(suggestTerm)
+      .then((response) => {
+        setSuggest([suggestTerm, ...response.data]);
+      })
+      .catch((error) => {
+        // setError(error);
+        console.log('error when suggestion api', error);
+      });
+    getHistory({
+      userId: userInfo.email,
+      keyword: suggestTerm,
+    })
+      .then((res) => {
+        setResultHistory(res);
+      })
+      .catch((error) => {
+        console.log('ERROR in Search component when call api get history', error);
+      });
+  }, [debounced]);
 
   const handleInputChange = (event) => {
     setSearchTerm(event.target.value);
@@ -40,19 +53,35 @@ const Search = () => {
   const handleDropdownItemClick = (item) => {
     // setSearchTerm(value);
     console.log('Hello', item);
-    navigate('/result', { state: { searchTerm } });
+    navigate(`/result?q=${searchTerm}`);
+    postSearchHistory({
+      userId: userInfo.email,
+      keyword: searchTerm,
+    })
+      .then((res) => {
+        console.log('call api save history', res);
+      })
+      .catch((error) => {
+        console.log('ERROR in Search component when call api save history', error);
+      });
     setShowDropdown(false);
   };
 
   const handleSearch = (e) => {
+    navigate(`/result?q=${searchTerm}`);
+    postSearchHistory({
+      userId: userInfo.email,
+      keyword: searchTerm,
+    })
+      .then((res) => {
+        console.log('call api save history', res);
+      })
+      .catch((error) => {
+        console.log('ERROR in Search component when call api save history', error);
+      });
+    setSearchTerm('');
     e.preventDefault();
-    navigate('/result', { state: { searchTerm } });
-  };
-
-  const handleInputBlur = (event) => {
-    // if (!event.currentTarget.contains(event.relatedTarget)) {
-    //   setShowDropdown(false);
-    // }
+    setShowDropdown(false);
   };
 
   const handleInputFocus = () => {
@@ -96,7 +125,6 @@ const Search = () => {
             placeholder="Search the documents which you want to read..."
             value={searchTerm}
             onChange={handleInputChange}
-            onBlur={handleInputBlur}
             onFocus={handleInputFocus}
             onKeyDown={(e) => {
               if (e.keyCode === 13) {
@@ -106,7 +134,7 @@ const Search = () => {
             autoComplete="off"
             required
           />
-          {showDropdown && (
+          {showDropdown && suggestList.length > 0 && debounced.trim() !== '' && (
             <ul className="search__list absolute z-10 bg-white border border-gray-300 mt-1 w-full rounded-lg shadow-lg pb-1">
               <div className="font-medium ml-4 mt-1 text-gray-400 border-b-[1px] text-sm">Suggestions</div>
               {suggestList.map((item, index) => (
@@ -120,9 +148,9 @@ const Search = () => {
                 </li>
               ))}
               <div className="font-medium ml-4 mt-1 mr-4 text-gray-400 border-b-[1px] text-sm">Histories</div>
-              {sampleData
-                .filter((item) => item.toLowerCase().includes(searchTerm.toLowerCase()))
-                .map((item, index) => (
+              {resultHistory
+                // ?.filter((item) => item.toLowerCase().includes(searchTerm.toLowerCase()))
+                ?.map((item, index) => (
                   <li
                     key={index}
                     className="cursor-pointer mx-2 px-2 py-[1px] hover:bg-[#3F96FE] text-base rounded hover:text-[white] hover:font-medium"

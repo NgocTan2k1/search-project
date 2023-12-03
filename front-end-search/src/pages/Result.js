@@ -1,20 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import axios from 'axios';
 import Item from '@/components/search/Item';
 import Layout from '@/components/layout/Layout';
-import { FaRegFilePdf } from 'react-icons/fa';
+import { getDocumentBySearch } from '@/services/searchService';
 
 const Result = () => {
   const location = useLocation();
-  const searchTerm = location?.state?.searchTerm || '';
+  const searchParams = new URLSearchParams(location.search);
+  const searchTerm = searchParams.get('q');
+
   const [myData, setData] = useState([]);
+  // const searsearchTermch
 
   useEffect(() => {
+    console.log('location:', searchTerm);
     if (searchTerm) {
       // axios.get(`http://127.0.0.1:5000/search?q=${searchTerm}`)
-      axios
-        .get(`http://127.0.0.1:5000/search?q=woman`)
+      getDocumentBySearch(searchTerm)
         .then((response) => {
           // response.data = list object
           setData(response.data);

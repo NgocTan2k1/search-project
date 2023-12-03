@@ -8,9 +8,9 @@ import Layout from '@/components/layout/Layout';
 import FilesList from '@/components/file/FilesList';
 import FileItem from '@/components/file/FileItem';
 import Pagination from '@/components/paginantion/Pagination';
-import Searching from '@/components/search/Searching';
-import Searchingg from '@/components/search/Searchingg';
-import ViewPdf from '@/components/search/ViewPdf';
+// import Searching from '@/components/search/Searching';
+// import Searchingg from '@/components/search/Searchingg';
+// import ViewPdf from '@/components/search/ViewPdf';
 
 import { storeLocal } from '@store';
 
@@ -28,6 +28,7 @@ function Home() {
 
   //store
   const setUserInfo = storeLocal((state) => state.setUserInfo);
+  const userInfo = storeLocal((state) => state.userInfo);
   const [totalPages, setTotalPages] = useState(12);
 
   const [data, setData] = useState();
@@ -56,7 +57,7 @@ function Home() {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
 
-    getDocument(0).then((res) => {
+    getDocument(currentPage - 1).then((res) => {
       // console.log(res);
       setData(res?.content);
       setTotalPages(res?.totalPages);
@@ -89,8 +90,9 @@ function Home() {
             {topHits?.map((item, index) => {
               return (
                 <Paper key={index} keyword={item.keyword}>
-                  <p className="">
-                    {item.keyword}: <strong>{item.count}</strong>
+                  <p className="relative px-2">
+                    {item.keyword}
+                    <strong className="absolute right-[-2px] top-[-2px] text-[12px]">{item.count}</strong>
                   </p>
                 </Paper>
               );

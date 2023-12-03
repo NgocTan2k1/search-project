@@ -19,6 +19,8 @@ function Button({ item }) {
 
   // useState
   const [file, setFile] = useState(null);
+  const [disable, setDisable] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   //function
   /**
@@ -44,11 +46,14 @@ function Button({ item }) {
 
   const handleFile = (e) => {
     setFile(e.target.files[0]);
+    setDisable(false);
   };
 
-  const handleUpload = () => {
+  const handleUpload = async () => {
     if (file?.name?.slice(-4) === '.pdf') {
-      uploadFile({
+      setDisable(true);
+      setLoading(true);
+      await uploadFile({
         file: file,
         upload_id: userInfo.uid,
         upload_mail: userInfo.email,
@@ -60,6 +65,8 @@ function Button({ item }) {
         .catch((err) => {
           console.log('err:', err);
         });
+      setDisable(false);
+      setLoading(false);
     } else {
       console.log("Can't upload file");
     }
@@ -85,15 +92,12 @@ function Button({ item }) {
               />
             </div>
             <div className="modal-action">
-              <form method="dialog" className="modal-backdrop">
-                <button>close</button>
-              </form>
               <form method="dialog">
                 <button className="btn focus-visible:outline-none">Close</button>
               </form>
 
-              <button className="btn" onClick={handleUpload}>
-                Upload
+              <button disabled={disable} className="btn" onClick={handleUpload}>
+                {loading ? <span className="loading loading-dots loading-md"></span> : 'Upload'}
               </button>
             </div>
           </div>
